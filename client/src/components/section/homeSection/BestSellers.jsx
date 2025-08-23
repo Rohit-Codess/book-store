@@ -115,7 +115,10 @@ const BestSellers = () => {
   }
 
   const BookCard = ({ book }) => (
-    <div className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
+    <div 
+      onClick={() => navigate(`/book/${book.id}`)}
+      className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
+    >
       <div className="relative">
         <img
           src={book.cover}

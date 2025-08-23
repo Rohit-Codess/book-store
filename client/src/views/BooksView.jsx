@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Filter, Search, ShoppingCart, Heart } from 'lucide-react';
 import BookService from '../services/BookService';
 
 const BooksView = () => {
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +72,10 @@ const BooksView = () => {
   }, [books, selectedCategory, searchTerm, sortBy]);
 
   const BookCard = ({ book }) => (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+    <div 
+      onClick={() => navigate(`/book/${book.id}`)}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+    >
       <div className="relative">
         <img
           src={book.image}

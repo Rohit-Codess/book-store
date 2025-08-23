@@ -9,6 +9,7 @@ import SchoolView from './views/SchoolView'
 import AuthorsView from './views/AuthorsView'
 import PublishersView from './views/PublishersView'
 import CatalogView from './views/CatalogView'
+import ProductDetailView from './views/ProductDetailView'
 import Login from './views/Login'
 import Signup from './views/Signup'
 import NotFound from './views/NotFound'
@@ -31,6 +32,7 @@ function App() {
             <Route path="/" element={<HomeView />} />
             <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="/books" element={<BooksView />} />
+            <Route path="/book/:id" element={<ProductDetailView />} />
             <Route path="/stationery" element={<StationeryView />} />
             <Route path="/school" element={<SchoolView />} />
             <Route path="/authors" element={<AuthorsView />} />

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Filter, Search, ShoppingCart, Heart, Package, GraduationCap } from 'lucide-react';
 import SchoolService from '../services/SchoolService';
 
 const SchoolView = () => {
+  const navigate = useNavigate();
   const [supplies, setSupplies] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +79,10 @@ const SchoolView = () => {
   }, [supplies, selectedCategory, selectedAgeGroup, searchTerm, sortBy]);
 
   const SupplyCard = ({ item }) => (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+    <div 
+      onClick={() => navigate(`/book/${item.id}`)}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+    >
       <div className="relative">
         <img
           src={item.image}

@@ -397,7 +397,10 @@ const BookSections = () => {
   }
 
   const BookCard = ({ book }) => (
-    <div className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+    <div 
+      onClick={() => navigate(`/book/${book.id}`)}
+      className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+    >
       <div className="relative">
         <img
           src={book.cover}
