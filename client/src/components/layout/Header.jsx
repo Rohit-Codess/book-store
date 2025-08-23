@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Search, ShoppingCart, Heart, User, Menu, X } from 'lucide-react'
+import { useApp } from '../../hooks/useApp.js'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const { cart, wishlist, user, isAuthenticated } = useApp()
 
   const menuItems = ['Books', 'Stationery', 'School', 'Authors', 'Publishers']
   
@@ -14,6 +16,9 @@ const Header = () => {
     'Academic Books',
     'Textbooks'
   ]
+
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0)
+  const wishlistItemCount = wishlist.length
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -66,21 +71,27 @@ const Header = () => {
             <div className="hidden md:flex items-center space-x-4">
               <button className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors">
                 <Heart className="h-6 w-6" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </span>
+                {wishlistItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {wishlistItemCount}
+                  </span>
+                )}
               </button>
               
               <button className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors">
                 <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  2
-                </span>
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
               </button>
               
               <button className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors">
                 <User className="h-6 w-6" />
-                <span className="text-sm">Login</span>
+                <span className="text-sm">
+                  {isAuthenticated ? user?.firstName || 'Account' : 'Login'}
+                </span>
               </button>
             </div>
 
@@ -142,17 +153,29 @@ const Header = () => {
 
           {/* Mobile Icons */}
           <div className="px-4 py-3 border-t flex justify-around">
-            <button className="flex flex-col items-center space-y-1 text-gray-600">
+            <button className="flex flex-col items-center space-y-1 text-gray-600 relative">
               <Heart className="h-6 w-6" />
               <span className="text-xs">Wishlist</span>
+              {wishlistItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {wishlistItemCount}
+                </span>
+              )}
             </button>
-            <button className="flex flex-col items-center space-y-1 text-gray-600">
+            <button className="flex flex-col items-center space-y-1 text-gray-600 relative">
               <ShoppingCart className="h-6 w-6" />
               <span className="text-xs">Cart</span>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </button>
             <button className="flex flex-col items-center space-y-1 text-gray-600">
               <User className="h-6 w-6" />
-              <span className="text-xs">Login</span>
+              <span className="text-xs">
+                {isAuthenticated ? 'Account' : 'Login'}
+              </span>
             </button>
           </div>
         </div>
