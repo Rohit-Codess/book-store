@@ -88,7 +88,7 @@ const BannerCarousel = () => {
               <p className={`text-lg sm:text-xl lg:text-2xl ${banner.textColor} mb-8 drop-shadow-md`}>
                 {banner.subtitle}
               </p>
-              <button className="bg-white text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-lg shadow-lg">
+              <button className="bg-white text-gray-800 px-8 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-lg shadow-lg">
                 {banner.cta}
               </button>
             </div>

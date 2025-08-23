@@ -377,39 +377,45 @@ const BookSections = () => {
   const scrollLeft = (sectionId) => {
     const container = document.getElementById(`books-${sectionId}`)
     if (container) {
-      container.scrollBy({ left: -300, behavior: 'smooth' })
+      // On mobile, scroll by 2 card widths, on desktop by 3
+      const isMobile = window.innerWidth < 768
+      const scrollDistance = isMobile ? 200 : 300
+      container.scrollBy({ left: -scrollDistance, behavior: 'smooth' })
     }
   }
 
   const scrollRight = (sectionId) => {
     const container = document.getElementById(`books-${sectionId}`)
     if (container) {
-      container.scrollBy({ left: 300, behavior: 'smooth' })
+      // On mobile, scroll by 2 card widths, on desktop by 3
+      const isMobile = window.innerWidth < 768
+      const scrollDistance = isMobile ? 200 : 300
+      container.scrollBy({ left: scrollDistance, behavior: 'smooth' })
     }
   }
 
   const BookCard = ({ book }) => (
-    <div className="flex-none w-48 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+    <div className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer">
       <div className="relative">
         <img
           src={book.cover}
           alt={book.title}
-          className="w-full h-64 object-cover rounded-t-lg"
+          className="w-full h-40 sm:h-52 md:h-64 object-cover rounded-t-lg"
         />
         {book.discount > 0 && (
-          <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+          <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-red-500 text-white px-1 sm:px-2 py-1 rounded text-xs font-semibold">
             {book.discount}% OFF
           </div>
         )}
       </div>
       
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-sm">
+      <div className="p-2 sm:p-3 md:p-4">
+        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-xs sm:text-sm">
           {book.title}
         </h3>
-        <p className="text-gray-600 text-xs mb-2">{book.author}</p>
+        <p className="text-gray-600 text-xs mb-1 sm:mb-2">{book.author}</p>
         
-        <div className="flex items-center mb-2">
+        <div className="flex items-center mb-1 sm:mb-2">
           <div className="flex items-center">
             <Star className="h-3 w-3 text-yellow-400 fill-current" />
             <span className="text-xs text-gray-600 ml-1">{book.rating}</span>
@@ -418,9 +424,9 @@ const BookSections = () => {
         
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-lg font-bold text-gray-900">₹{book.price}</span>
+            <span className="text-sm sm:text-lg font-bold text-gray-900">₹{book.price}</span>
             {book.originalPrice > book.price && (
-              <span className="text-sm text-gray-500 line-through ml-1">
+              <span className="text-xs sm:text-sm text-gray-500 line-through ml-1">
                 ₹{book.originalPrice}
               </span>
             )}
@@ -463,7 +469,7 @@ const BookSections = () => {
               {/* Books Container */}
               <div
                 id={`books-${section.id}`}
-                className="flex space-x-4 overflow-x-auto scrollbar-hide scroll-smooth"
+                className="flex space-x-2 sm:space-x-3 md:space-x-4 overflow-x-auto scrollbar-hide scroll-smooth px-8"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {section.books.map((book) => (

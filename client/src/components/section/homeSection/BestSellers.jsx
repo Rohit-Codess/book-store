@@ -95,46 +95,52 @@ const BestSellers = () => {
   const scrollLeft = () => {
     const container = document.getElementById('bestsellers-container')
     if (container) {
-      container.scrollBy({ left: -300, behavior: 'smooth' })
+      // On mobile, scroll by 2 card widths, on desktop by 3
+      const isMobile = window.innerWidth < 768
+      const scrollDistance = isMobile ? 200 : 300
+      container.scrollBy({ left: -scrollDistance, behavior: 'smooth' })
     }
   }
 
   const scrollRight = () => {
     const container = document.getElementById('bestsellers-container')
     if (container) {
-      container.scrollBy({ left: 300, behavior: 'smooth' })
+      // On mobile, scroll by 2 card widths, on desktop by 3
+      const isMobile = window.innerWidth < 768
+      const scrollDistance = isMobile ? 200 : 300
+      container.scrollBy({ left: scrollDistance, behavior: 'smooth' })
     }
   }
 
   const BookCard = ({ book }) => (
-    <div className="flex-none w-48 bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
+    <div className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
       <div className="relative">
         <img
           src={book.cover}
           alt={book.title}
-          className="w-full h-64 object-cover rounded-t-lg"
+          className="w-full h-40 sm:h-52 md:h-64 object-cover rounded-t-lg"
         />
         
         {/* Badge */}
-        <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+        <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-red-500 text-white px-1 sm:px-2 py-1 rounded text-xs font-semibold">
           {book.badge}
         </div>
         
         {/* Discount */}
         {book.discount > 0 && (
-          <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-green-500 text-white px-1 sm:px-2 py-1 rounded text-xs font-semibold">
             {book.discount}% OFF
           </div>
         )}
       </div>
       
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-sm">
+      <div className="p-2 sm:p-3 md:p-4">
+        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-xs sm:text-sm">
           {book.title}
         </h3>
-        <p className="text-gray-600 text-xs mb-2">{book.author}</p>
+        <p className="text-gray-600 text-xs mb-1 sm:mb-2">{book.author}</p>
         
-        <div className="flex items-center mb-2">
+        <div className="flex items-center mb-1 sm:mb-2">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -150,18 +156,18 @@ const BestSellers = () => {
           </div>
         </div>
         
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-2 sm:mb-3">
           <div>
-            <span className="text-lg font-bold text-gray-900">₹{book.price}</span>
+            <span className="text-sm sm:text-lg font-bold text-gray-900">₹{book.price}</span>
             {book.originalPrice > book.price && (
-              <span className="text-sm text-gray-500 line-through ml-1">
+              <span className="text-xs sm:text-sm text-gray-500 line-through ml-1">
                 ₹{book.originalPrice}
               </span>
             )}
           </div>
         </div>
         
-        <button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 text-sm">
+        <button className="w-full bg-blue-600 text-white py-1 sm:py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 text-xs sm:text-sm">
           Add to Cart
         </button>
       </div>
@@ -204,7 +210,7 @@ const BestSellers = () => {
           {/* Books Container */}
           <div
             id="bestsellers-container"
-            className="flex space-x-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+            className="flex space-x-2 sm:space-x-4 md:space-x-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4 px-8"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {bestSellers.map((book) => (
