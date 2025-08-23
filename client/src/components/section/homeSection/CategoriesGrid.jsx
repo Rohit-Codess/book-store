@@ -1,4 +1,8 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+
 const CategoriesGrid = () => {
+  const navigate = useNavigate()
   const categories = [
     {
       id: 1,
@@ -91,6 +95,7 @@ const CategoriesGrid = () => {
             <div
               key={category.id}
               className="group cursor-pointer transform hover:scale-105 transition-all duration-200"
+              onClick={() => navigate('/books')}
             >
               <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
                 {/* Category Image */}
@@ -101,9 +106,6 @@ const CategoriesGrid = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
                       e.target.src = `https://via.placeholder.com/300x200/4F46E5/white?text=${encodeURIComponent(category.name)}`;
-                    }}
-                    onLoad={(e) => {
-                      console.log(`Image loaded: ${category.name}`, e.target.src);
                     }}
                   />
                   {/* Remove the dark overlay that might be causing the black appearance */}
@@ -125,7 +127,10 @@ const CategoriesGrid = () => {
 
         {/* View All Categories CTA */}
         <div className="text-center mt-10">
-          <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
+          <button 
+            onClick={() => navigate('/books')}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+          >
             Explore All Categories
           </button>
         </div>

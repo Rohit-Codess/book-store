@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom'
+
 const FeaturedCollections = () => {
+  const navigate = useNavigate()
   const collections = [
     {
       id: 1,
@@ -62,7 +65,14 @@ const FeaturedCollections = () => {
                   <p className="text-gray-600 mb-8 leading-relaxed">
                     {collection.description}
                   </p>
-                  <button className={`${collection.buttonColor} text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 text-lg`}>
+                  <button 
+                    onClick={() => {
+                      if (collection.cta.includes('Textbooks')) navigate('/school');
+                      else if (collection.cta.includes('Stationery')) navigate('/stationery');
+                      else navigate('/books');
+                    }}
+                    className={`${collection.buttonColor} text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 text-lg`}
+                  >
                     {collection.cta}
                   </button>
                 </div>
@@ -90,10 +100,16 @@ const FeaturedCollections = () => {
               Contact our team and we'll help you find the perfect book or educational material
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
+              <button 
+                onClick={() => navigate('/contact')}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+              >
                 Contact Support
               </button>
-              <button className="border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-200">
+              <button 
+                onClick={() => navigate('/books')}
+                className="border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-200"
+              >
                 Request a Book
               </button>
             </div>

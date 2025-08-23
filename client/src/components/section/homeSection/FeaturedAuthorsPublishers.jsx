@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom'
+
 const FeaturedAuthorsPublishers = () => {
+  const navigate = useNavigate()
   const authors = [
     {
       id: 1,
@@ -149,7 +152,10 @@ const FeaturedAuthorsPublishers = () => {
 
           {/* View All Authors CTA */}
           <div className="text-center mt-8">
-            <button className="text-blue-600 hover:text-blue-800 font-medium">
+            <button 
+              onClick={() => navigate('/authors')}
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
               View All Authors →
             </button>
           </div>
@@ -213,7 +219,10 @@ const FeaturedAuthorsPublishers = () => {
 
           {/* View All Publishers CTA */}
           <div className="text-center mt-8">
-            <button className="text-blue-600 hover:text-blue-800 font-medium">
+            <button 
+              onClick={() => navigate('/publishers')}
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
               View All Publishers →
             </button>
           </div>

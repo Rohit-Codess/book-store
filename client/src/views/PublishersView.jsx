@@ -95,64 +95,64 @@ const PublishersView = () => {
         <img
           src={publisher.logo}
           alt={publisher.name}
-          className="w-full h-32 object-contain p-4 bg-gray-50 group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-24 sm:h-32 object-contain p-2 sm:p-4 bg-gray-50 group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
-            e.target.src = `https://via.placeholder.com/200x100/4F46E5/white?text=${encodeURIComponent(publisher.name.slice(0, 8))}`;
+            e.target.src = `https://placehold.co/200x100/4F46E5/white?text=${encodeURIComponent(publisher.name.slice(0, 10))}`;
           }}
         />
         {publisher.featured && (
-          <span className="absolute top-2 left-2 bg-indigo-500 text-white px-2 py-1 text-xs font-semibold rounded">
+          <span className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-indigo-500 text-white px-1 sm:px-2 py-1 text-xs font-semibold rounded">
             Featured
           </span>
         )}
         {publisher.international && (
-          <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 text-xs font-semibold rounded flex items-center">
+          <span className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-green-500 text-white px-1 sm:px-2 py-1 text-xs font-semibold rounded flex items-center">
             <Globe className="w-3 h-3 mr-1" />
-            Global
+            <span className="hidden sm:inline">Global</span>
           </span>
         )}
       </div>
       
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-3">
+      <div className="p-3 sm:p-6">
+        <div className="flex items-start justify-between mb-2 sm:mb-3">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">{publisher.name}</h3>
-            <p className="text-indigo-600 font-medium text-sm">{publisher.category}</p>
+            <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-1 line-clamp-2">{publisher.name}</h3>
+            <p className="text-indigo-600 font-medium text-xs sm:text-sm">{publisher.category}</p>
           </div>
-          <Building2 className="w-5 h-5 text-gray-400" />
+          <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
         </div>
         
-        <div className="flex items-center mb-3">
+        <div className="flex items-center mb-2 sm:mb-3">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${
+                className={`w-3 h-3 sm:w-4 sm:h-4 ${
                   i < Math.floor(publisher.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                 }`}
               />
             ))}
           </div>
-          <span className="text-sm text-gray-600 ml-2">{publisher.rating}/5</span>
+          <span className="text-xs sm:text-sm text-gray-600 ml-2">{publisher.rating}/5</span>
         </div>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{publisher.description}</p>
+        <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-3">{publisher.description}</p>
         
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center justify-between text-sm">
+        <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
+          <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-gray-500">Established:</span>
             <span className="font-medium">{publisher.established}</span>
           </div>
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-gray-500 flex items-center">
-              <BookOpen className="w-4 h-4 mr-1" />
+              <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Books:
             </span>
             <span className="font-medium">{publisher.books}+</span>
           </div>
         </div>
         
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-colors duration-300">
+        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-colors duration-300 text-xs sm:text-sm">
           View Catalog
         </button>
       </div>
@@ -212,7 +212,7 @@ const PublishersView = () => {
 
         {/* Publishers Grid */}
         {filteredPublishers.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {filteredPublishers.map((publisher) => (
               <PublisherCard key={publisher.id} publisher={publisher} />
             ))}
@@ -258,19 +258,19 @@ const PublishersView = () => {
         {/* Browse by Category */}
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Browse by Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {categories.filter(category => category !== 'All').map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`p-6 rounded-lg text-center transition-all duration-300 ${
+                className={`p-3 sm:p-6 rounded-lg text-center transition-all duration-300 ${
                   selectedCategory === category
                     ? 'bg-indigo-600 text-white shadow-lg'
                     : 'bg-white hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300'
                 }`}
               >
-                <div className="font-semibold text-lg mb-2">{category}</div>
-                <div className="text-sm opacity-75">
+                <div className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2">{category}</div>
+                <div className="text-xs sm:text-sm opacity-75">
                   {publishers.filter(publisher => publisher.category === category).length} publishers
                 </div>
                 <div className="text-xs mt-1 opacity-60">
@@ -283,32 +283,32 @@ const PublishersView = () => {
         </div>
 
         {/* Statistics */}
-        <div className="mt-16 bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Publisher Statistics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="mt-16 bg-white rounded-lg shadow-md p-4 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">Publisher Statistics</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">
+              <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1 sm:mb-2">
                 {publishers.length}
               </div>
-              <div className="text-gray-600">Total Publishers</div>
+              <div className="text-gray-600 text-xs sm:text-base">Total Publishers</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">
+              <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1 sm:mb-2">
                 {publishers.reduce((total, pub) => total + pub.books, 0)}+
               </div>
-              <div className="text-gray-600">Books Available</div>
+              <div className="text-gray-600 text-xs sm:text-base">Books Available</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">
+              <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1 sm:mb-2">
                 {publishers.filter(pub => pub.international).length}
               </div>
-              <div className="text-gray-600">International Publishers</div>
+              <div className="text-gray-600 text-xs sm:text-base">International Publishers</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">
+              <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1 sm:mb-2">
                 {(publishers.reduce((total, pub) => total + pub.rating, 0) / publishers.length).toFixed(1)}
               </div>
-              <div className="text-gray-600">Average Rating</div>
+              <div className="text-gray-600 text-xs sm:text-base">Average Rating</div>
             </div>
           </div>
         </div>

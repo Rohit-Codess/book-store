@@ -1,6 +1,8 @@
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const BestSellers = () => {
+  const navigate = useNavigate()
   const bestSellers = [
     {
       id: 1,
@@ -167,7 +169,10 @@ const BestSellers = () => {
           </div>
         </div>
         
-        <button className="w-full bg-blue-600 text-white py-1 sm:py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 text-xs sm:text-sm">
+        <button 
+          onClick={() => navigate('/books')}
+          className="w-full bg-blue-600 text-white py-1 sm:py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 text-xs sm:text-sm"
+        >
           Add to Cart
         </button>
       </div>
@@ -185,7 +190,10 @@ const BestSellers = () => {
               Most popular books loved by readers worldwide
             </p>
           </div>
-          <button className="text-blue-600 hover:text-blue-800 font-medium">
+          <button 
+            onClick={() => navigate('/books')}
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
             View All →
           </button>
         </div>

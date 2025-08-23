@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom'
+
 const PromotionalBanners = () => {
+  const navigate = useNavigate()
   const promotions = [
     {
       id: 1,
@@ -62,7 +65,14 @@ const PromotionalBanners = () => {
                   <p className="text-gray-600 mb-8 leading-relaxed">
                     {promotion.description}
                   </p>
-                  <button className={`${promotion.buttonColor} text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 text-lg`}>
+                  <button 
+                    onClick={() => {
+                      if (promotion.cta.includes('Learning')) navigate('/school');
+                      else if (promotion.cta.includes('Stationery')) navigate('/stationery');
+                      else navigate('/books');
+                    }}
+                    className={`${promotion.buttonColor} text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 text-lg`}
+                  >
                     {promotion.cta}
                   </button>
                 </div>
@@ -91,10 +101,16 @@ const PromotionalBanners = () => {
               Get up to 70% off on selected books and stationery items
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+              <button 
+                onClick={() => navigate('/books')}
+                className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+              >
                 Shop Sale Items
               </button>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors duration-200">
+              <button 
+                onClick={() => navigate('/books')}
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors duration-200"
+              >
                 View All Deals
               </button>
             </div>

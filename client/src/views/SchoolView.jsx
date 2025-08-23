@@ -84,7 +84,7 @@ const SchoolView = () => {
           alt={item.name}
           className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
-            e.target.src = `https://via.placeholder.com/200x200/F59E0B/white?text=${encodeURIComponent(item.name.slice(0, 8))}`;
+            e.target.src = `https://placehold.co/200x100/4F46E5/white?text=${encodeURIComponent(item.name.slice(0, 10))}`;
           }}
         />
         {item.featured && (

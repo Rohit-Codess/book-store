@@ -1,6 +1,9 @@
 import { BookOpen, Palette, GraduationCap, Users } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const TopCategories = () => {
+  const navigate = useNavigate()
+  
   const categories = [
     {
       id: 1,
@@ -58,9 +61,6 @@ const TopCategories = () => {
                       src={category.image}
                       alt={category.name}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.src = `https://via.placeholder.com/200x200/4F46E5/white?text=${encodeURIComponent(category.name)}`;
-                      }}
                     />
                   </div>
                 </div>
@@ -76,7 +76,10 @@ const TopCategories = () => {
 
         {/* Additional Categories CTA */}
         <div className="text-center mt-10">
-          <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
+          <button 
+            onClick={() => navigate('/books')}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+          >
             View All Categories
           </button>
         </div>

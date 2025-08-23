@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const BannerCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const navigate = useNavigate()
 
   const banners = [
     {
@@ -88,7 +90,10 @@ const BannerCarousel = () => {
               <p className={`text-lg sm:text-xl lg:text-2xl ${banner.textColor} mb-8 drop-shadow-md`}>
                 {banner.subtitle}
               </p>
-              <button className="bg-white text-gray-800 px-8 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-lg shadow-lg">
+              <button 
+                onClick={() => navigate('/books')}
+                className="bg-white text-gray-800 px-8 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-lg shadow-lg"
+              >
                 {banner.cta}
               </button>
             </div>

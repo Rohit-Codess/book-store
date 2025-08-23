@@ -1,6 +1,8 @@
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const BookSections = () => {
+  const navigate = useNavigate()
   // Sample book data - 36 books
   const sampleBooks = [
     {
@@ -444,7 +446,10 @@ const BookSections = () => {
             {/* Section Header */}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">{section.name}</h2>
-              <button className="text-blue-600 hover:text-blue-800 font-medium">
+              <button 
+                onClick={() => navigate('/books')}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
                 View All →
               </button>
             </div>
