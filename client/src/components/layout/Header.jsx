@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, ShoppingCart, Heart, User, Menu, X } from 'lucide-react'
 import { useApp } from '../../hooks/useApp.js'
 
@@ -7,7 +8,14 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const { cart, wishlist, user, isAuthenticated } = useApp()
 
-  const menuItems = ['Books', 'Stationery', 'School', 'Authors', 'Publishers']
+  const menuItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Books', path: '/books' },
+    { name: 'Stationery', path: '/stationery' },
+    { name: 'School', path: '/school' },
+    { name: 'Authors', path: '/authors' },
+    { name: 'Publishers', path: '/publishers' }
+  ]
   
   const searchSuggestions = [
     'Fiction Books',
@@ -27,7 +35,9 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-blue-600">Book World</h1>
+            <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+              Book World
+            </Link>
           </div>
 
           {/* Search Bar - Desktop */}
@@ -87,12 +97,15 @@ const Header = () => {
                 )}
               </button>
               
-              <button className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors">
+              <Link
+                to={isAuthenticated ? '/account' : '/login'}
+                className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors"
+              >
                 <User className="h-6 w-6" />
                 <span className="text-sm">
                   {isAuthenticated ? user?.firstName || 'Account' : 'Login'}
                 </span>
-              </button>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -111,13 +124,13 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8 py-3">
             {menuItems.map((item) => (
-              <a
-                key={item}
-                href="#"
+              <Link
+                key={item.name}
+                to={item.path}
                 className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
-                {item}
-              </a>
+                {item.name}
+              </Link>
             ))}
           </nav>
         </div>
@@ -141,13 +154,14 @@ const Header = () => {
           {/* Mobile Navigation */}
           <nav className="py-2">
             {menuItems.map((item) => (
-              <a
-                key={item}
-                href="#"
+              <Link
+                key={item.name}
+                to={item.path}
                 className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
               >
-                {item}
-              </a>
+                {item.name}
+              </Link>
             ))}
           </nav>
 
@@ -171,12 +185,16 @@ const Header = () => {
                 </span>
               )}
             </button>
-            <button className="flex flex-col items-center space-y-1 text-gray-600">
+            <Link 
+              to={isAuthenticated ? '/account' : '/login'}
+              className="flex flex-col items-center space-y-1 text-gray-600"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <User className="h-6 w-6" />
               <span className="text-xs">
                 {isAuthenticated ? 'Account' : 'Login'}
               </span>
-            </button>
+            </Link>
           </div>
         </div>
       )}
