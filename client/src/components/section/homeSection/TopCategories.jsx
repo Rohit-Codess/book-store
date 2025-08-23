@@ -44,7 +44,7 @@ const TopCategories = () => {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 lg:gap-8">
           {categories.map((category) => {
             return (
               <div
@@ -52,8 +52,8 @@ const TopCategories = () => {
                 className="text-center transition-all duration-300 cursor-pointer transform hover:scale-105"
               >
                 {/* Circular Image */}
-                <div className="inline-block mb-4">
-                  <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="inline-block mb-2 sm:mb-3 md:mb-4">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <img
                       src={category.image}
                       alt={category.name}
@@ -66,7 +66,7 @@ const TopCategories = () => {
                 </div>
                 
                 {/* Category Name */}
-                <h3 className="text-xl font-semibold text-gray-900">
+                <h3 className="text-xs sm:text-base md:text-lg lg:text-xl font-semibold text-gray-900">
                   {category.name}
                 </h3>
               </div>
