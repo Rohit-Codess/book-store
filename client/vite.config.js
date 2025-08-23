@@ -10,6 +10,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     assetsDir: 'assets',
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         manualChunks: undefined,
@@ -19,11 +20,13 @@ export default defineConfig({
   preview: {
     port: 4173,
     strictPort: true,
+    host: true,
   },
   server: {
     port: 5173,
     strictPort: true,
     host: true,
     origin: "http://0.0.0.0:5173",
+    historyApiFallback: true,
   },
 })

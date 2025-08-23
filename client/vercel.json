@@ -63,40 +63,28 @@
       ]
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/books",
-      "destination": "/index.html"
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
     },
     {
-      "source": "/stationery",
-      "destination": "/index.html"
+      "src": "/images/(.*)",
+      "dest": "/images/$1"
     },
     {
-      "source": "/school",
-      "destination": "/index.html"
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
     },
     {
-      "source": "/authors",
-      "destination": "/index.html"
+      "src": "/vite.svg",
+      "dest": "/vite.svg"
     },
     {
-      "source": "/publishers",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/catalog",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/login",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/signup",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false
 }
