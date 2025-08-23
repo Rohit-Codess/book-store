@@ -65,15 +65,36 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!.*\\.).*)",
+      "source": "/books",
       "destination": "/index.html"
-    }
-  ],
-  "redirects": [
+    },
     {
-      "source": "/home",
-      "destination": "/",
-      "permanent": true
+      "source": "/stationery",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/school",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/authors",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/publishers",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/catalog",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/signup",
+      "destination": "/index.html"
     }
   ],
   "cleanUrls": true,
