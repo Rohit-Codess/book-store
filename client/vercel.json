@@ -65,35 +65,19 @@
   ],
   "rewrites": [
     {
-      "source": "/books",
-      "destination": "/index.html"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
     {
-      "source": "/stationery",
-      "destination": "/index.html"
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
     },
     {
-      "source": "/school",
-      "destination": "/index.html"
+      "source": "/images/(.*)",
+      "destination": "/images/$1"
     },
     {
-      "source": "/authors",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/publishers",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/catalog",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/login",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/signup",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
