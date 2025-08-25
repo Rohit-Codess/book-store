@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Filter, Search, ShoppingCart, Heart, Package, GraduationCap } from 'lucide-react';
-import SchoolService from '../services/SchoolService';
+import { useApp } from '../hooks/useApp.js';
 
 const SchoolView = () => {
   const navigate = useNavigate();
+  const { addToCart, isAuthenticated } = useApp();
   const [supplies, setSupplies] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,12 +17,107 @@ const SchoolView = () => {
   const categories = ['All', 'Bags', 'Mathematical Instruments', 'Uniforms', 'Lunch Boxes', 'Footwear', 'Lab Equipment', 'Accessories', 'Art Supplies'];
   const ageGroups = ['All', 'Kids', 'Teen'];
 
+  // Mock data for school supplies
+  const mockSupplies = useMemo(() => [
+    {
+      id: 'school_1',
+      name: 'School Backpack Premium',
+      brand: 'Nike',
+      category: 'Bags',
+      ageGroup: 'Kids',
+      price: 1299,
+      originalPrice: 1599,
+      rating: 4.5,
+      reviews: 128,
+      description: 'Comfortable and durable backpack perfect for school',
+      image: '/images/section/homeSection/BookSections/1.jpg',
+      featured: true,
+      inStock: true
+    },
+    {
+      id: 'school_2',
+      name: 'Geometry Box Set',
+      brand: 'Camlin',
+      category: 'Mathematical Instruments',
+      ageGroup: 'All',
+      price: 299,
+      originalPrice: 399,
+      rating: 4.2,
+      reviews: 85,
+      description: 'Complete geometry set with compass, protractor, and ruler',
+      image: '/images/section/homeSection/BookSections/2.jpg',
+      featured: false,
+      inStock: true
+    },
+    {
+      id: 'school_3',
+      name: 'School Uniform Shirt',
+      brand: 'Reliance',
+      category: 'Uniforms',
+      ageGroup: 'Kids',
+      price: 599,
+      originalPrice: 799,
+      rating: 4.0,
+      reviews: 45,
+      description: 'High-quality cotton school uniform shirt',
+      image: '/images/section/homeSection/BookSections/3.jpg',
+      featured: false,
+      inStock: true
+    },
+    {
+      id: 'school_4',
+      name: 'Insulated Lunch Box',
+      brand: 'Milton',
+      category: 'Lunch Boxes',
+      ageGroup: 'All',
+      price: 899,
+      originalPrice: 1199,
+      rating: 4.7,
+      reviews: 156,
+      description: 'Keeps food fresh and warm for hours',
+      image: '/images/section/homeSection/BookSections/4.jpg',
+      featured: true,
+      inStock: true
+    },
+    {
+      id: 'school_5',
+      name: 'School Canvas Shoes',
+      brand: 'Bata',
+      category: 'Footwear',
+      ageGroup: 'Kids',
+      price: 1099,
+      originalPrice: 1399,
+      rating: 4.3,
+      reviews: 92,
+      description: 'Comfortable canvas shoes for everyday school wear',
+      image: '/images/section/homeSection/BookSections/5.jpg',
+      featured: false,
+      inStock: true
+    },
+    {
+      id: 'school_6',
+      name: 'Science Lab Kit',
+      brand: 'Edulab',
+      category: 'Lab Equipment',
+      ageGroup: 'Teen',
+      price: 2299,
+      originalPrice: 2799,
+      rating: 4.6,
+      reviews: 34,
+      description: 'Complete science experiment kit for students',
+      image: '/images/section/homeSection/BookSections/6.jpg',
+      featured: true,
+      inStock: true
+    }
+  ], []);
+
   useEffect(() => {
     const loadSupplies = async () => {
       try {
         setLoading(true);
-        const suppliesData = await SchoolService.getAllSchoolSupplies();
-        setSupplies(suppliesData);
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setSupplies(mockSupplies);
       } catch (error) {
         console.error('Error loading school supplies:', error);
       } finally {
@@ -30,7 +126,7 @@ const SchoolView = () => {
     };
 
     loadSupplies();
-  }, []);
+  }, [mockSupplies]);
 
   useEffect(() => {
     const filterItems = () => {
@@ -78,9 +174,24 @@ const SchoolView = () => {
     filterItems();
   }, [supplies, selectedCategory, selectedAgeGroup, searchTerm, sortBy]);
 
+  const handleAddToCart = async (e, item) => {
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    try {
+      await addToCart(item, 1);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   const SupplyCard = ({ item }) => (
     <div 
-      onClick={() => navigate(`/book/${item.id}`)}
+      onClick={() => navigate(`/books/${item.id}`, { state: { product: item } })}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
     >
       <div className="relative">
@@ -146,6 +257,7 @@ const SchoolView = () => {
           </div>
           
           <button 
+            onClick={(e) => handleAddToCart(e, item)}
             className={`px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center space-x-1 sm:space-x-2 transition-colors duration-300 text-xs sm:text-sm ${
               item.inStock 
                 ? 'bg-orange-600 hover:bg-orange-700 text-white' 

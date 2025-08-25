@@ -398,7 +398,7 @@ const BookSections = () => {
 
   const BookCard = ({ book }) => (
     <div 
-      onClick={() => navigate(`/book/${book.id}`)}
+      onClick={() => navigate(`/book/${book.id}`, { state: { product: book } })}
       className="flex-none w-32 sm:w-40 md:w-48 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
     >
       <div className="relative">
@@ -407,15 +407,15 @@ const BookSections = () => {
           alt={book.title}
           className="w-full h-40 sm:h-52 md:h-64 object-cover rounded-t-lg"
         />
-        {book.discount > 0 && (
+        {/* {book.discount > 0 && (
           <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-red-500 text-white px-1 sm:px-2 py-1 rounded text-xs font-semibold">
             {book.discount}% OFF
           </div>
-        )}
+        )} */}
       </div>
       
       <div className="p-2 sm:p-3 md:p-4">
-        <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-xs sm:text-sm">
+        <h3 className="truncate font-semibold text-gray-900 mb-1 line-clamp-2 text-xs sm:text-sm">
           {book.title}
         </h3>
         <p className="text-gray-600 text-xs mb-1 sm:mb-2">{book.author}</p>
@@ -423,7 +423,12 @@ const BookSections = () => {
         <div className="flex items-center mb-1 sm:mb-2">
           <div className="flex items-center">
             <Star className="h-3 w-3 text-yellow-400 fill-current" />
-            <span className="text-xs text-gray-600 ml-1">{book.rating}</span>
+            <span className="text-xs text-gray-600 ml-1">
+              {typeof book.rating === 'object' 
+                ? (book.rating?.average || 4.0).toFixed(1)
+                : (book.rating || 4.0).toFixed(1)
+              }
+            </span>
           </div>
         </div>
         
@@ -451,7 +456,7 @@ const BookSections = () => {
               <h2 className="text-2xl font-bold text-gray-900">{section.name}</h2>
               <button 
                 onClick={() => navigate('/books')}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
               >
                 View All →
               </button>

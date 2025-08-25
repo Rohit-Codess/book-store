@@ -127,12 +127,12 @@ const CategoriesGrid = () => {
 
         {/* View All Categories CTA */}
         <div className="text-center mt-10">
-          <button 
+          <a
             onClick={() => navigate('/books')}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+            className="cursor-pointer text-blue-600 px-8 py-3 rounded-lg font-bold"
           >
-            Explore All Categories
-          </button>
+            Explore All Categories →
+          </a>
         </div>
       </div>
     </section>

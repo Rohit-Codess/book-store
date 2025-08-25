@@ -6,7 +6,7 @@ import CategoriesGrid from '../components/section/homeSection/CategoriesGrid';
 import FeaturedCollections from '../components/section/homeSection/FeaturedCollections';
 import PromotionalBanners from '../components/section/homeSection/PromotionalBanners';
 import FeaturedAuthorsPublishers from '../components/section/homeSection/FeaturedAuthorsPublishers';
-import BestSellers from '../components/section/homeSection/BestSellers';
+// import BestSellers from '../components/section/homeSection/BestSellers';
 
 const HomeView = () => {
   return (
@@ -33,7 +33,7 @@ const HomeView = () => {
       <FeaturedAuthorsPublishers />
       
       {/* Best Sellers */}
-      <BestSellers />
+      {/* <BestSellers /> */}
     </div>
   );
 };

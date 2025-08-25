@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Filter, Search, ShoppingCart, Heart, Package } from 'lucide-react';
-import StationeryService from '../services/StationeryService';
+import { useApp } from '../hooks/useApp.js';
 
 const StationeryView = () => {
   const navigate = useNavigate();
+  const { addToCart, isAuthenticated, showLoginModal } = useApp();
   const [stationery, setStationery] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,12 +15,101 @@ const StationeryView = () => {
 
   const categories = ['All', 'Pens', 'Pencils', 'Notebooks', 'Art Supplies', 'Office Supplies'];
 
+  // Mock data for stationery
+  const mockStationery = useMemo(() => [
+    {
+      id: 'stat_1',
+      name: 'Premium Ball Pen Set',
+      brand: 'Parker',
+      category: 'Pens',
+      price: 599,
+      originalPrice: 799,
+      rating: 4.7,
+      reviews: 234,
+      description: 'Smooth writing experience with premium ink',
+      image: '/images/section/homeSection/BookSections/7.jpg',
+      featured: true,
+      inStock: true
+    },
+    {
+      id: 'stat_2',
+      name: 'Mechanical Pencil',
+      brand: 'Pilot',
+      category: 'Pencils',
+      price: 199,
+      originalPrice: 299,
+      rating: 4.5,
+      reviews: 156,
+      description: 'Precision writing for technical drawings',
+      image: '/images/section/homeSection/BookSections/8.jpg',
+      featured: false,
+      inStock: true
+    },
+    {
+      id: 'stat_3',
+      name: 'Spiral Notebook A4',
+      brand: 'Oxford',
+      category: 'Notebooks',
+      price: 149,
+      originalPrice: 199,
+      rating: 4.3,
+      reviews: 89,
+      description: 'High-quality paper for smooth writing',
+      image: '/images/section/homeSection/BookSections/9.jpg',
+      featured: false,
+      inStock: true
+    },
+    {
+      id: 'stat_4',
+      name: 'Watercolor Set',
+      brand: 'Winsor & Newton',
+      category: 'Art Supplies',
+      price: 1299,
+      originalPrice: 1599,
+      rating: 4.8,
+      reviews: 67,
+      description: 'Professional grade watercolors for artists',
+      image: '/images/section/homeSection/BookSections/10.jpg',
+      featured: true,
+      inStock: true
+    },
+    {
+      id: 'stat_5',
+      name: 'Sticky Notes Pack',
+      brand: 'Post-it',
+      category: 'Office Supplies',
+      price: 299,
+      originalPrice: 399,
+      rating: 4.4,
+      reviews: 145,
+      description: 'Colorful sticky notes for organization',
+      image: '/images/section/homeSection/BookSections/11.jpg',
+      featured: false,
+      inStock: true
+    },
+    {
+      id: 'stat_6',
+      name: 'Highlighter Set',
+      brand: 'Stabilo',
+      category: 'Pens',
+      price: 399,
+      originalPrice: 499,
+      rating: 4.6,
+      reviews: 198,
+      description: 'Vibrant colors for highlighting text',
+      image: '/images/section/homeSection/BookSections/12.jpg',
+      featured: true,
+      inStock: true
+    }
+  ], []);
+
   useEffect(() => {
     const loadStationery = async () => {
       try {
         setLoading(true);
-        const stationeryData = await StationeryService.getAllStationery();
-        setStationery(stationeryData);
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setStationery(mockStationery);
       } catch (error) {
         console.error('Error loading stationery:', error);
       } finally {
@@ -28,7 +118,7 @@ const StationeryView = () => {
     };
 
     loadStationery();
-  }, []);
+  }, [mockStationery]);
 
   useEffect(() => {
     const filterItems = () => {
@@ -71,9 +161,24 @@ const StationeryView = () => {
     filterItems();
   }, [stationery, selectedCategory, searchTerm, sortBy]);
 
+  const handleAddToCart = async (e, item) => {
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    try {
+      await addToCart(item, 1);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   const StationeryCard = ({ item }) => (
     <div 
-      onClick={() => navigate(`/book/${item.id}`)}
+      onClick={() => navigate(`/books/${item.id}`, { state: { product: item } })}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
     >
       <div className="relative">
@@ -131,6 +236,7 @@ const StationeryView = () => {
           </div>
           
           <button 
+            onClick={(e) => handleAddToCart(e, item)}
             className={`px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center space-x-1 sm:space-x-2 transition-colors duration-300 text-xs sm:text-sm ${
               item.inStock 
                 ? 'bg-green-600 hover:bg-green-700 text-white' 

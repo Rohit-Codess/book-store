@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Filter, Search, ShoppingCart, Heart } from 'lucide-react';
 import BookService from '../services/BookService';
+import { useApp } from '../hooks/useApp.js';
 
 const BooksView = () => {
   const navigate = useNavigate();
+  const { addToCart, isAuthenticated, showLoginModal } = useApp();
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,9 +73,24 @@ const BooksView = () => {
     filterBooks();
   }, [books, selectedCategory, searchTerm, sortBy]);
 
+  const handleAddToCart = async (e, book) => {
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      showLoginModal({ type: 'addToCart', payload: { book, quantity: 1 } });
+      return;
+    }
+
+    try {
+      await addToCart(book, 1);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   const BookCard = ({ book }) => (
     <div 
-      onClick={() => navigate(`/book/${book.id}`)}
+      onClick={() => navigate(`/book/${book.id}`, { state: { product: book } })}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
     >
       <div className="relative">
@@ -115,25 +132,38 @@ const BooksView = () => {
               <Star
                 key={i}
                 className={`w-4 h-4 ${
-                  i < Math.floor(book.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                  i < Math.floor(
+                    typeof book.rating === 'object' 
+                      ? book.rating?.average || book.averageRating || 4
+                      : book.rating || book.averageRating || 4
+                  ) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                 }`}
               />
             ))}
           </div>
-          <span className="text-sm text-gray-600 ml-2">({book.reviews})</span>
+          <span className="text-sm text-gray-600 ml-2">
+            ({typeof book.rating === 'object' ? book.rating?.count || book.reviews || 0 : book.reviews || 0})
+          </span>
         </div>
 
         <p className="text-gray-600 text-xs sm:text-sm mb-3 line-clamp-2">{book.description}</p>
         
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-1 sm:space-x-2">
-            <span className="text-sm sm:text-lg font-bold text-green-600">₹{book.price}</span>
-            {book.originalPrice > book.price && (
-              <span className="text-xs sm:text-sm text-gray-500 line-through">₹{book.originalPrice}</span>
+            <span className="text-sm sm:text-lg font-bold text-green-600">
+              ₹{book.price?.selling || book.sellingPrice || book.price}
+            </span>
+            {(book.price?.mrp || book.originalPrice) && (book.price?.mrp || book.originalPrice) > (book.price?.selling || book.sellingPrice || book.price) && (
+              <span className="text-xs sm:text-sm text-gray-500 line-through">
+                ₹{book.price?.mrp || book.originalPrice}
+              </span>
             )}
           </div>
           
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center space-x-1 sm:space-x-2 transition-colors duration-300 text-xs sm:text-sm">
+          <button 
+            onClick={(e) => handleAddToCart(e, book)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center space-x-1 sm:space-x-2 transition-colors duration-300 text-xs sm:text-sm"
+          >
             <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="hidden sm:inline">Add to Cart</span>
             <span className="sm:hidden">Add</span>

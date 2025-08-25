@@ -128,12 +128,14 @@ const PublishersView = () => {
               <Star
                 key={i}
                 className={`w-3 h-3 sm:w-4 sm:h-4 ${
-                  i < Math.floor(publisher.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                  i < Math.floor(typeof publisher.rating === 'object' ? publisher.rating?.average || 0 : publisher.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                 }`}
               />
             ))}
           </div>
-          <span className="text-xs sm:text-sm text-gray-600 ml-2">{publisher.rating}/5</span>
+          <span className="text-xs sm:text-sm text-gray-600 ml-2">
+            {typeof publisher.rating === 'object' ? publisher.rating?.average || 0 : publisher.rating || 0}/5
+          </span>
         </div>
 
         <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-3">{publisher.description}</p>

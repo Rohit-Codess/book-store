@@ -1,14 +1,174 @@
-import Book from '../models/Book.js';
+import ApiService from './ApiService.js';
+
+// Minimal Book class for mock data
+class Book {
+  constructor({
+    id,
+    title,
+    author,
+    price,
+    originalPrice,
+    image,
+    category,
+    rating,
+    reviews,
+    isBestseller,
+    isNewArrival,
+    description,
+    onSale,
+    discount
+  }) {
+    this.id = id;
+    this.title = title;
+    this.author = author;
+    this.price = price;
+    this.originalPrice = originalPrice;
+    this.image = image;
+    this.category = category;
+    this.rating = rating;
+    this.reviews = reviews;
+    this.isBestseller = isBestseller;
+    this.isNewArrival = isNewArrival;
+    this.description = description;
+    this.onSale = onSale;
+    this.discount = discount;
+  }
+}
 
 /**
  * BookService - Handles all book-related API calls and business logic
+ * Updated to work with real backend API
  */
 class BookService {
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    this.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
   }
 
-  // Mock data for development
+  // Get all books with filtering and pagination
+  async getBooks(filters = {}) {
+    try {
+      const queryParams = new URLSearchParams();
+      
+      // Add filters to query params
+      Object.keys(filters).forEach(key => {
+        if (filters[key] !== undefined && filters[key] !== '') {
+          queryParams.append(key, filters[key]);
+        }
+      });
+
+      const queryString = queryParams.toString();
+      const endpoint = queryString ? `/books?${queryString}` : '/books';
+      
+      const response = await ApiService.get(endpoint);
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching books:', error);
+      // Fallback to mock data if API fails
+      return this.getMockBooks();
+    }
+  }
+
+  // Get single book by ID
+  async getBook(id) {
+    try {
+      const response = await ApiService.get(`/books/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching book:', error);
+      // Fallback to mock data
+      return this.getMockBooks().find(book => book.id === parseInt(id));
+    }
+  }
+
+  // Get featured books
+  async getFeaturedBooks() {
+    try {
+      const response = await ApiService.get('/books/featured');
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching featured books:', error);
+      return this.getMockBooks().slice(0, 8);
+    }
+  }
+
+  // Get bestseller books
+  async getBestsellers() {
+    try {
+      const response = await ApiService.get('/books/bestsellers');
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching bestsellers:', error);
+      return this.getMockBooks().filter(book => book.isBestseller);
+    }
+  }
+
+  // Get books by category
+  async getBooksByCategory(category, page = 1, limit = 20) {
+    try {
+      const response = await ApiService.get(`/books/category/${category}?page=${page}&limit=${limit}`);
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching books by category:', error);
+      return this.getMockBooks().filter(book => book.category.toLowerCase() === category.toLowerCase());
+    }
+  }
+
+  // Get all categories
+  async getCategories() {
+    try {
+      const response = await ApiService.get('/books/categories');
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return [
+        { _id: 'Fiction', count: 25 },
+        { _id: 'Young Adult', count: 18 },
+        { _id: 'Children', count: 12 },
+        { _id: 'Non-Fiction', count: 15 },
+        { _id: 'Academic', count: 8 }
+      ];
+    }
+  }
+
+  // Search books
+  async searchBooks(query, page = 1, limit = 20) {
+    try {
+      const response = await ApiService.get(`/books/search/${encodeURIComponent(query)}?page=${page}&limit=${limit}`);
+      return response.data || [];
+    } catch (error) {
+      console.error('Error searching books:', error);
+      const books = this.getMockBooks();
+      return books.filter(book => 
+        book.title.toLowerCase().includes(query.toLowerCase()) ||
+        book.author.toLowerCase().includes(query.toLowerCase()) ||
+        book.category.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+  }
+
+  // Get related books
+  async getRelatedBooks(bookId) {
+    try {
+      const response = await ApiService.get(`/books/${bookId}/related`);
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching related books:', error);
+      return this.getMockBooks().slice(0, 4);
+    }
+  }
+
+  // Add book review
+  async addBookReview(bookId, reviewData) {
+    try {
+      const response = await ApiService.post(`/books/${bookId}/reviews`, reviewData);
+      return response;
+    } catch (error) {
+      console.error('Error adding review:', error);
+      throw error;
+    }
+  }
+
+  // Mock data for fallback (keeping existing mock data structure)
   getMockBooks() {
     return [
       // Fiction Books
@@ -253,74 +413,23 @@ class BookService {
     ];
   }
 
-  // Get all books
+  // Legacy methods for backward compatibility
   async getAllBooks() {
-    try {
-      // For now, return mock data
-      return this.getMockBooks();
-    } catch (error) {
-      console.error('Error fetching books:', error);
-      return [];
-    }
+    return this.getBooks();
   }
 
-  // Get books by category
-  async getBooksByCategory(category) {
-    try {
-      const books = await this.getAllBooks();
-      return books.filter(book => book.category.toLowerCase() === category.toLowerCase());
-    } catch (error) {
-      console.error('Error fetching books by category:', error);
-      return [];
-    }
-  }
-
-  // Get bestsellers
-  async getBestsellers() {
-    try {
-      const books = await this.getAllBooks();
-      return books.filter(book => book.isBestseller);
-    } catch (error) {
-      console.error('Error fetching bestsellers:', error);
-      return [];
-    }
-  }
-
-  // Get new arrivals
   async getNewArrivals() {
     try {
-      const books = await this.getAllBooks();
+      const books = await this.getBooks();
       return books.filter(book => book.isNewArrival);
     } catch (error) {
       console.error('Error fetching new arrivals:', error);
-      return [];
+      return this.getMockBooks().filter(book => book.isNewArrival);
     }
   }
 
-  // Search books
-  async searchBooks(query) {
-    try {
-      const books = await this.getAllBooks();
-      return books.filter(book => 
-        book.title.toLowerCase().includes(query.toLowerCase()) ||
-        book.author.toLowerCase().includes(query.toLowerCase()) ||
-        book.category.toLowerCase().includes(query.toLowerCase())
-      );
-    } catch (error) {
-      console.error('Error searching books:', error);
-      return [];
-    }
-  }
-
-  // Get book by ID
   async getBookById(id) {
-    try {
-      const books = await this.getAllBooks();
-      return books.find(book => book.id === parseInt(id));
-    } catch (error) {
-      console.error('Error fetching book by ID:', error);
-      return null;
-    }
+    return this.getBook(id);
   }
 }
 

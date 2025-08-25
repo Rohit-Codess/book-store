@@ -117,12 +117,14 @@ const AuthorsView = () => {
               <Star
                 key={i}
                 className={`w-4 h-4 ${
-                  i < Math.floor(author.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                  i < Math.floor(typeof author.rating === 'object' ? author.rating?.average || 0 : author.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                 }`}
               />
             ))}
           </div>
-          <span className="text-sm text-gray-600 ml-2">{author.rating}/5</span>
+          <span className="text-sm text-gray-600 ml-2">
+            {typeof author.rating === 'object' ? author.rating?.average || 0 : author.rating || 0}/5
+          </span>
         </div>
 
         <p className="text-gray-600 text-xs sm:text-sm mb-4 line-clamp-3">{author.bio}</p>
@@ -237,7 +239,7 @@ const AuthorsView = () => {
                   <span className="text-sm">{author.books} books published</span>
                   <div className="flex items-center">
                     <Star className="w-4 h-4 text-yellow-300 fill-current mr-1" />
-                    <span>{author.rating}</span>
+                    <span>{typeof author.rating === 'object' ? author.rating?.average || 0 : author.rating || 0}</span>
                   </div>
                 </div>
               </div>

@@ -11,7 +11,6 @@ const FeaturedCollections = () => {
       cta: 'Shop Textbooks',
       image: '/images/section/homeSection/FeaturedCollections/1.jpg',
       bgColor: 'bg-blue-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     },
     {
       id: 2,
@@ -21,7 +20,6 @@ const FeaturedCollections = () => {
       cta: 'Browse Stationery',
       image: '/images/section/homeSection/FeaturedCollections/2.jpg',
       bgColor: 'bg-amber-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     },
     {
       id: 3,
@@ -31,7 +29,6 @@ const FeaturedCollections = () => {
       cta: 'Discover Stories',
       image: '/images/section/homeSection/FeaturedCollections/3.jpg',
       bgColor: 'bg-red-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     }
   ]
 
@@ -71,9 +68,9 @@ const FeaturedCollections = () => {
                       else if (collection.cta.includes('Stationery')) navigate('/stationery');
                       else navigate('/books');
                     }}
-                    className={`${collection.buttonColor} text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 text-lg`}
+                    className={`cursor-pointer text-blue-600 py-3 rounded-lg font-bold`}
                   >
-                    {collection.cta}
+                    {collection.cta} →
                   </button>
                 </div>
 

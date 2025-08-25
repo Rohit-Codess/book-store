@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { AppProvider } from './context/AppContext'
 import Layout from './components/layout/Layout'
+import ProtectedRoute from './components/common/ProtectedRoute'
 import HomeView from './views/HomeView'
 import BooksView from './views/BooksView'
 import StationeryView from './views/StationeryView'
@@ -10,8 +10,9 @@ import AuthorsView from './views/AuthorsView'
 import PublishersView from './views/PublishersView'
 import CatalogView from './views/CatalogView'
 import ProductDetailView from './views/ProductDetailView'
-import Login from './views/Login'
-import Signup from './views/Signup'
+import CartView from './views/CartView'
+import LoginPage from './views/LoginPage'
+import SignupPage from './views/SignupPage'
 import NotFound from './views/NotFound'
 import './App.css'
 
@@ -24,31 +25,35 @@ const Loading = () => (
 
 function App() {
   return (
-    <AppProvider>
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          {/* Main layout routes */}
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomeView />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
-            <Route path="/books" element={<BooksView />} />
-            <Route path="/book/:id" element={<ProductDetailView />} />
-            <Route path="/stationery" element={<StationeryView />} />
-            <Route path="/school" element={<SchoolView />} />
-            <Route path="/authors" element={<AuthorsView />} />
-            <Route path="/publishers" element={<PublishersView />} />
-            <Route path="/catalog" element={<CatalogView />} />
-          </Route>
-          
-          {/* Auth routes - without layout */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          
-          {/* Catch-all route for 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </AppProvider>
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        {/* Authentication routes (no layout) */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        
+        {/* Main layout routes */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomeView />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/books" element={<BooksView />} />
+          <Route path="/books/:id" element={<ProductDetailView />} />
+          <Route path="/book/:id" element={<ProductDetailView />} />
+          <Route path="/cart" element={<ProtectedRoute><CartView /></ProtectedRoute>} />
+          <Route path="/wishlist" element={<ProtectedRoute><div>Wishlist Page</div></ProtectedRoute>} />
+          <Route path="/account" element={<ProtectedRoute><div>Account Page</div></ProtectedRoute>} />
+          <Route path="/orders" element={<ProtectedRoute><div>Orders Page</div></ProtectedRoute>} />
+          <Route path="/checkout" element={<ProtectedRoute><div>Checkout Page</div></ProtectedRoute>} />
+          <Route path="/stationery" element={<StationeryView />} />
+          <Route path="/school" element={<SchoolView />} />
+          <Route path="/authors" element={<AuthorsView />} />
+          <Route path="/publishers" element={<PublishersView />} />
+          <Route path="/catalog" element={<CatalogView />} />
+        </Route>
+        
+        {/* Catch-all route for 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   )
 }
 

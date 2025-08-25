@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Filter, Search, ShoppingCart, Heart, BookOpen, Package, GraduationCap } from 'lucide-react';
+import { useApp } from '../hooks/useApp.js';
 import BookService from '../services/BookService';
-import StationeryService from '../services/StationeryService';
-import SchoolService from '../services/SchoolService';
 
 const CatalogView = () => {
+  const navigate = useNavigate();
+  const { addToCart, isAuthenticated } = useApp();
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,23 +18,83 @@ const CatalogView = () => {
   const categories = ['All', 'Books', 'Stationery', 'School Supplies'];
   const priceRanges = ['All', 'Under ₹200', '₹200-₹500', '₹500-₹1000', 'Above ₹1000'];
 
-  useEffect(() => {
-    loadAllProducts();
-  }, []);
+  // Mock data for non-book products
+  const mockStationery = useMemo(() => [
+    {
+      id: 'stat_1',
+      name: 'Premium Ball Pen Set',
+      brand: 'Parker',
+      category: 'Stationery',
+      subcategory: 'Pens',
+      price: 599,
+      originalPrice: 799,
+      rating: 4.7,
+      reviews: 234,
+      description: 'Smooth writing experience with premium ink',
+      image: '/images/section/homeSection/BookSections/7.jpg',
+      featured: true,
+      inStock: true,
+      productType: 'Stationery'
+    },
+    {
+      id: 'stat_2',
+      name: 'Spiral Notebook A4',
+      brand: 'Oxford',
+      category: 'Stationery',
+      subcategory: 'Notebooks',
+      price: 149,
+      originalPrice: 199,
+      rating: 4.3,
+      reviews: 89,
+      description: 'High-quality paper for smooth writing',
+      image: '/images/section/homeSection/BookSections/8.jpg',
+      featured: false,
+      inStock: true,
+      productType: 'Stationery'
+    }
+  ], []);
 
-  useEffect(() => {
-    filterProducts();
-  }, [allProducts, selectedCategory, searchTerm, sortBy, priceRange]);
+  const mockSchoolSupplies = useMemo(() => [
+    {
+      id: 'school_1',
+      name: 'School Backpack Premium',
+      brand: 'Nike',
+      category: 'School Supplies',
+      subcategory: 'Bags',
+      price: 1299,
+      originalPrice: 1599,
+      rating: 4.5,
+      reviews: 128,
+      description: 'Comfortable and durable backpack perfect for school',
+      image: '/images/section/homeSection/BookSections/9.jpg',
+      featured: true,
+      inStock: true,
+      productType: 'School Supply'
+    },
+    {
+      id: 'school_2',
+      name: 'Geometry Box Set',
+      brand: 'Camlin',
+      category: 'School Supplies',
+      subcategory: 'Mathematical Instruments',
+      price: 299,
+      originalPrice: 399,
+      rating: 4.2,
+      reviews: 85,
+      description: 'Complete geometry set with compass, protractor, and ruler',
+      image: '/images/section/homeSection/BookSections/10.jpg',
+      featured: false,
+      inStock: true,
+      productType: 'School Supply'
+    }
+  ], []);
 
-  const loadAllProducts = async () => {
+  const loadAllProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const [books, stationery, schoolSupplies] = await Promise.all([
-        BookService.getAllBooks(),
-        StationeryService.getAllStationery(),
-        SchoolService.getAllSchoolSupplies()
-      ]);
-
+      // Load books from backend
+      const books = await BookService.getAllBooks();
+      
       // Normalize products to have consistent structure
       const normalizedBooks = books.map(book => ({
         ...book,
@@ -44,36 +106,39 @@ const CatalogView = () => {
         inStock: true
       }));
 
-      const normalizedStationery = stationery.map(item => ({
+      const normalizedStationery = mockStationery.map(item => ({
         ...item,
-        productType: 'Stationery',
         title: item.name,
         author: item.brand,
-        category: 'Stationery',
-        subcategory: item.category,
-        reviews: item.reviews || 0
       }));
 
-      const normalizedSchool = schoolSupplies.map(item => ({
+      const normalizedSchoolSupplies = mockSchoolSupplies.map(item => ({
         ...item,
-        productType: 'School Supply',
         title: item.name,
         author: item.brand,
-        category: 'School Supplies',
-        subcategory: item.category,
-        reviews: item.reviews || 0
       }));
 
-      const combined = [...normalizedBooks, ...normalizedStationery, ...normalizedSchool];
-      setAllProducts(combined);
+      const allProductsData = [
+        ...normalizedBooks,
+        ...normalizedStationery,
+        ...normalizedSchoolSupplies
+      ];
+
+      setAllProducts(allProductsData);
     } catch (error) {
       console.error('Error loading products:', error);
+      // Fallback to mock data only
+      const allProductsData = [
+        ...mockStationery,
+        ...mockSchoolSupplies
+      ];
+      setAllProducts(allProductsData);
     } finally {
       setLoading(false);
     }
-  };
+  }, [mockStationery, mockSchoolSupplies]);
 
-  const filterProducts = () => {
+  const filterProducts = useCallback(() => {
     let filtered = [...allProducts];
 
     // Filter by category
@@ -86,7 +151,7 @@ const CatalogView = () => {
       filtered = filtered.filter(product =>
         (product.title || product.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
         (product.author || product.brand).toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.subcategory || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -104,6 +169,8 @@ const CatalogView = () => {
           break;
         case 'Above ₹1000':
           filtered = filtered.filter(product => product.price > 1000);
+          break;
+        default:
           break;
       }
     }
@@ -127,6 +194,29 @@ const CatalogView = () => {
     }
 
     setFilteredProducts(filtered);
+  }, [allProducts, selectedCategory, searchTerm, sortBy, priceRange]);
+
+  useEffect(() => {
+    loadAllProducts();
+  }, [loadAllProducts]);
+
+  useEffect(() => {
+    filterProducts();
+  }, [filterProducts]);
+
+  const handleAddToCart = async (e, product) => {
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    try {
+      await addToCart(product, 1);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
   const getProductIcon = (productType) => {
@@ -143,7 +233,10 @@ const CatalogView = () => {
   };
 
   const ProductCard = ({ product }) => (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+    <div 
+      onClick={() => navigate(`/books/${product.id}`, { state: { product } })}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+    >
       <div className="relative">
         <img
           src={product.image}
@@ -225,6 +318,7 @@ const CatalogView = () => {
           </div>
           
           <button 
+            onClick={(e) => handleAddToCart(e, product)}
             className={`px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center space-x-1 sm:space-x-2 transition-colors duration-300 text-xs sm:text-sm ${
               product.inStock !== false
                 ? 'bg-blue-600 hover:bg-blue-700 text-white' 

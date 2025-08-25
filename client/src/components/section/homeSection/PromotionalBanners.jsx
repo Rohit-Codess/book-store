@@ -11,7 +11,6 @@ const PromotionalBanners = () => {
       cta: 'Start Learning',
       image: '/images/section/homeSection/PromotionalBanners/1.jpg',
       bgColor: 'bg-emerald-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     },
     {
       id: 2,
@@ -21,7 +20,6 @@ const PromotionalBanners = () => {
       cta: 'Explore Classics',
       image: '/images/section/homeSection/PromotionalBanners/2.jpg',
       bgColor: 'bg-pink-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     },
     {
       id: 3,
@@ -31,7 +29,6 @@ const PromotionalBanners = () => {
       cta: 'Browse Academic',
       image: '/images/section/homeSection/PromotionalBanners/3.jpg',
       bgColor: 'bg-indigo-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     }
   ]
 
@@ -71,9 +68,9 @@ const PromotionalBanners = () => {
                       else if (promotion.cta.includes('Stationery')) navigate('/stationery');
                       else navigate('/books');
                     }}
-                    className={`${promotion.buttonColor} text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 text-lg`}
+                    className={`cursor-pointer text-blue-600 py-3 rounded-lg font-bold`}
                   >
-                    {promotion.cta}
+                    {promotion.cta} →
                   </button>
                 </div>
 
