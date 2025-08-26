@@ -14,9 +14,9 @@ const FlipkartFooter = () => {
               <li><Link to="/contact" className="text-gray-400 hover:text-white">Contact Us</Link></li>
               <li><Link to="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
               <li><Link to="/careers" className="text-gray-400 hover:text-white">Careers</Link></li>
-              <li><Link to="/stories" className="text-gray-400 hover:text-white">Flipkart Stories</Link></li>
+              <li><Link to="/stories" className="text-gray-400 hover:text-white">Book World Stories</Link></li>
               <li><Link to="/press" className="text-gray-400 hover:text-white">Press</Link></li>
-              <li><Link to="/wholesale" className="text-gray-400 hover:text-white">Flipkart Wholesale</Link></li>
+              <li><Link to="/wholesale" className="text-gray-400 hover:text-white">Book World Wholesale</Link></li>
             </ul>
           </div>
 
@@ -58,7 +58,7 @@ const FlipkartFooter = () => {
             <div className="mt-6">
               <h4 className="text-gray-300 font-medium mb-2 text-sm">Mail Us:</h4>
               <p className="text-gray-400 text-xs leading-relaxed">
-                Flipkart Internet Private Limited,<br />
+                Book World Internet Private Limited,<br />
                 Buildings Alyssa, Begonia &<br />
                 Clove Embassy Tech Village,<br />
                 Outer Ring Road, Devarabeesanahalli Village,<br />
@@ -106,7 +106,7 @@ const FlipkartFooter = () => {
         <div className="max-w-screen-xl mx-auto px-4 py-4">
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-2 lg:space-y-0">
             <div className="flex items-center space-x-4 text-sm text-gray-400">
-              <span>© 2007-2025 Flipkart.com</span>
+              <span>© 2007-2025 BookWorld.com</span>
             </div>
             
             <div className="flex items-center space-x-6">
