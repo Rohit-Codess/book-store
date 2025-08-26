@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import Header from './Header.jsx'
+import Header from './FlipkartHeader.jsx'
 import Footer from './Footer.jsx'
 import NotificationContainer from '../common/NotificationContainer.jsx'
 

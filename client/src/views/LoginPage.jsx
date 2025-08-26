@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useApp } from '../hooks/useApp.js';
 
-const LoginPage = () => {
+const FlipkartLoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, loading, isAuthenticated } = useApp();
@@ -13,7 +12,7 @@ const LoginPage = () => {
     password: ''
   });
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
+  const [isSignup] = useState(false);
 
   // Get the redirect path from location state or default to home
   const from = location.state?.from || '/';
@@ -44,15 +43,11 @@ const LoginPage = () => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Please enter Email ID/Mobile number';
     }
 
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    if (!isSignup && !formData.password) {
+      newErrors.password = 'Please enter password';
     }
 
     setErrors(newErrors);
@@ -67,112 +62,145 @@ const LoginPage = () => {
     try {
       const result = await login({
         email: formData.email,
-        password: formData.password
+        password: formData.password || 'demo123'
       });
 
       if (result.success) {
-        // Navigate to the intended page or home
         navigate(from, { replace: true });
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: error.message || 'Login failed. Please try again.' });
+      setErrors({ general: error.message || 'Something went wrong! Please try again.' });
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </button>
-          
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your Book World account</p>
-        </div>
+  const handleGetOTP = () => {
+    if (!formData.email) {
+      setErrors({ email: 'Please enter Email ID/Mobile number' });
+      return;
+    }
+    // Handle OTP logic here
+    alert('OTP sent to your email/mobile!');
+  };
 
-        {/* Login Form */}
-        <div className="bg-white rounded-lg shadow-xl p-6">
+  return (
+    <div className="min-h-screen bg-[#2874f0] flex">
+      {/* Left Section - Info */}
+      <div className="hidden lg:flex lg:w-1/2 bg-[#2874f0] text-white flex-col justify-center px-12">
+        <div className="max-w-md">
+          <h1 className="text-3xl font-medium mb-4">Login</h1>
+          <p className="text-lg mb-8 text-gray-200">Get access to your Orders, Wishlist and Recommendations</p>
+          
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+              <span className="text-gray-200">Save your preferences</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+              <span className="text-gray-200">Track your orders</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+              <span className="text-gray-200">Get personalized recommendations</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Decorative Image */}
+        <div className="mt-12">
+          <img 
+            src="/images/login-illustration.png" 
+            alt="Shopping" 
+            className="w-64 h-48 object-contain"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Right Section - Form */}
+      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          {/* Mobile Header */}
+          <div className="lg:hidden mb-8 text-center">
+            <Link to="/" className="text-2xl font-bold text-[#2874f0] italic">
+              Flipkart
+            </Link>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error */}
             {errors.general && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-3">
+              <div className="bg-red-50 border border-red-200 rounded p-3">
                 <p className="text-sm text-red-600">{errors.general}</p>
               </div>
             )}
 
-            {/* Email Field */}
+            {/* Email/Mobile Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your email"
-                />
-              </div>
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full px-0 py-4 border-0 border-b-2 focus:outline-none focus:ring-0 ${
+                  errors.email ? 'border-red-500' : 'border-gray-200 focus:border-[#2874f0]'
+                } text-gray-900 placeholder-gray-500 bg-transparent`}
+                placeholder="Enter Email ID/Mobile number"
+              />
+              {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
             </div>
 
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            {/* Terms */}
+            <p className="text-xs text-gray-500 leading-relaxed">
+              By continuing, you agree to Flipkart's{' '}
+              <Link to="/terms" className="text-[#2874f0] hover:underline">Terms of Use</Link> and{' '}
+              <Link to="/privacy" className="text-[#2874f0] hover:underline">Privacy Policy</Link>.
+            </p>
+
+            {/* Request OTP Button */}
+            <button
+              type="button"
+              onClick={handleGetOTP}
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-sm transition-colors"
+            >
+              Request OTP
+            </button>
+
+            {/* OR Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">OR</span>
+              </div>
+            </div>
+
+            {/* Password Field (if not signup) */}
+            {!isSignup && (
+              <div>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
+                  type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your password"
+                  className={`w-full px-0 py-4 border-0 border-b-2 focus:outline-none focus:ring-0 ${
+                    errors.password ? 'border-red-500' : 'border-gray-200 focus:border-[#2874f0]'
+                  } text-gray-900 placeholder-gray-500 bg-transparent`}
+                  placeholder="Enter Password"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+                {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
               </div>
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-            </div>
+            )}
 
-            {/* Forgot Password */}
-            <div className="text-right">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-orange-600 hover:text-orange-500 font-medium"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-
-            {/* Submit Button */}
+            {/* Login Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center"
+              className="w-full bg-[#2874f0] hover:bg-[#1c5bb8] disabled:bg-blue-300 text-white font-medium py-3 px-4 rounded-sm transition-colors flex items-center justify-center"
             >
               {loading ? (
                 <>
@@ -180,49 +208,59 @@ const LoginPage = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Signing In...
+                  Logging in...
                 </>
               ) : (
-                'Sign In'
+                'Login'
               )}
             </button>
 
-            {/* Switch to Signup */}
+            {/* Forgot Password */}
+            <div className="text-center">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-[#2874f0] hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            {/* New to Flipkart */}
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                New to Flipkart?{' '}
                 <Link
                   to="/signup"
                   state={{ from }}
-                  className="text-orange-600 hover:text-orange-500 font-medium"
+                  className="text-[#2874f0] hover:underline font-medium"
                 >
-                  Create Account
+                  Create an account
                 </Link>
               </p>
             </div>
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="bg-gray-50 rounded-md p-4">
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="bg-gray-50 rounded p-4">
               <h4 className="text-sm font-medium text-gray-700 mb-3">Demo Credentials:</h4>
               <div className="text-xs text-gray-600 space-y-2">
                 <div className="flex justify-between items-center">
-                  <span><strong>Admin:</strong> admin@bookworld.com</span>
+                  <span><strong>Email:</strong> admin@flipkart.com</span>
                   <button
                     type="button"
-                    onClick={() => setFormData({ email: 'admin@bookworld.com', password: 'admin123' })}
-                    className="text-orange-600 hover:text-orange-500"
+                    onClick={() => setFormData({ email: 'admin@flipkart.com', password: 'admin123' })}
+                    className="text-[#2874f0] hover:underline"
                   >
                     Use
                   </button>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span><strong>User:</strong> user@bookworld.com</span>
+                  <span><strong>Mobile:</strong> 9876543210</span>
                   <button
                     type="button"
-                    onClick={() => setFormData({ email: 'user@bookworld.com', password: 'user123' })}
-                    className="text-orange-600 hover:text-orange-500"
+                    onClick={() => setFormData({ email: '9876543210', password: 'user123' })}
+                    className="text-[#2874f0] hover:underline"
                   >
                     Use
                   </button>
@@ -236,4 +274,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default FlipkartLoginPage;
